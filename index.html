@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b0b0f">
+  <meta name="description" content="Cliply — a private, browser-based paste and file vault."><title>Cliply — Your local paste vault</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"><link rel="stylesheet" href="/style.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script><script defer src="/app.js"></script>
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="topbar">
+    <a class="brand" href="#home"><span class="brand-mark">C</span><span>cliply<span class="brand-dot">.</span></span></a>
+    <nav><a href="#explore">My pastes</a><a href="#create">Create</a><a href="#settings">Settings</a></nav>
+    <div class="account-actions"><span class="user-label" id="profile-label">Local workspace</span><button class="btn btn-quiet" id="export-all">Export data</button></div>
+  </header>
+  <main id="app">
+    <section class="hero" id="home">
+      <div class="eyebrow"><span class="pulse"></span> PRIVATE BY DEFAULT · STORED IN THIS BROWSER</div>
+      <h1>Your snippets.<br><span>Your space.</span></h1>
+      <p class="hero-copy">Save code, notes, and files in a local Cliply vault.<br>Your content stays on this device until you export it.</p>
+      <div class="hero-actions"><a class="btn btn-primary btn-large" href="#create">Create a paste <span>↗</span></a><a class="btn btn-outline btn-large" href="#explore">View saved pastes</a></div>
+      <div class="hero-meta"><span><i class="meta-dot"></i> No cloud account</span><span><i class="meta-dot"></i> IndexedDB storage</span><span><i class="meta-dot"></i> Export anytime</span></div>
+    </section>
+    <section class="workspace" id="create">
+      <div class="section-heading"><div><div class="eyebrow">LOCAL WORKSPACE</div><h2>Create something</h2></div><div class="segmented"><button class="segment active" data-mode="text">Text paste</button><button class="segment" data-mode="file">File upload</button></div></div>
+      <div class="panel editor-panel">
+        <div class="field-row"><label class="field grow"><span>Title</span><input id="paste-title" maxlength="120" placeholder="Untitled paste"></label><label class="field language-field"><span>Language</span><select id="language"><option value="plaintext">Plain text</option><option value="javascript">JavaScript</option><option value="typescript">TypeScript</option><option value="lua">Lua</option><option value="python">Python</option><option value="html">HTML</option><option value="css">CSS</option><option value="json">JSON</option><option value="bash">Bash</option><option value="sql">SQL</option><option value="markdown">Markdown</option></select></label></div>
+        <div id="text-mode"><div class="editor-toolbar"><span><span class="live-dot"></span> EDITOR</span><span class="mono">UTF-8</span></div><textarea id="paste-content" spellcheck="false" placeholder="// Start typing or paste your code here..."></textarea></div>
+        <div id="file-mode" class="hidden"><label class="dropzone" id="dropzone"><input type="file" id="file-input"><span class="upload-icon">↑</span><strong>Drop a file here or <em>browse</em></strong><small>Up to 25 MB per file · Stored locally in this browser</small><span id="selected-file" class="selected-file"></span></label></div>
+        <div class="editor-footer"><label class="field compact"><span>Visibility label</span><select id="visibility"><option value="private">Private (local)</option><option value="unlisted">Unlisted (local)</option><option value="public">Public (local)</option></select></label><label class="field compact"><span>Expiration</span><select id="expiration"><option value="never">Never</option><option value="1h">1 hour</option><option value="1d">1 day</option><option value="7d">7 days</option><option value="30d">30 days</option></select></label><span class="footer-spacer"></span><button class="btn btn-primary" id="publish">Save paste <span>↗</span></button></div>
+        <div class="notice" id="notice" role="status"></div>
+        <p class="local-warning">Visibility is only a label in local mode. It does not publish or protect a shareable web link.</p>
+      </div>
+    </section>
+    <section class="explore-section" id="explore"><div class="section-heading"><div><div class="eyebrow">THIS BROWSER</div><h2>Saved pastes</h2></div><div class="searchbox"><span>⌕</span><input id="search" placeholder="Search your saved pastes..."></div></div><div class="paste-grid" id="paste-grid"><div class="empty-state">Loading local pastes…</div></div></section>
+    <section class="workspace" id="settings"><div class="section-heading"><div><div class="eyebrow">LOCAL PROFILE</div><h2>Settings & API tokens</h2></div></div>
+      <div class="panel editor-panel settings-panel">
+        <div class="field-row"><label class="field grow"><span>Workspace name</span><input id="profile-name" maxlength="32" placeholder="My Cliply workspace"></label><button class="btn btn-outline" id="save-profile">Save profile</button></div>
+        <div class="token-intro"><h3>Local access tokens</h3><p>Token secrets are encrypted in this browser vault and can be revealed again with their vault passphrase. These are local credential records only: they do not create a remote API, enforce permissions, or grant access from another device.</p></div>
+        <div class="token-create"><label class="field"><span>Token name</span><input id="token-name" maxlength="40" placeholder="My script / integration"></label><label class="field"><span>Permission label (metadata only)</span><select id="token-scope"><option value="read">Read-only label</option><option value="readwrite">Read + write label</option></select></label><label class="field"><span>Expires</span><select id="token-expiry"><option value="never">Never</option><option value="7d">7 days</option><option value="30d">30 days</option><option value="90d">90 days</option></select></label><button class="btn btn-primary" id="create-token">Generate token</button></div>
+        <div id="new-token-panel" class="new-token hidden"><strong>Copy your token now</strong><p>This is the only time the full token will be shown. If you lose it, revoke it and generate another.</p><div class="share-link"><input id="new-token-value" readonly><button class="btn btn-primary" id="copy-token">Copy</button></div></div>
+        <p class="local-warning">Permission labels are descriptive only. There is no server-side API in this edition to validate tokens or enforce these scopes.</p><div class="token-list-head"><h3>Saved tokens</h3><span id="token-count">0 tokens</span></div><div id="token-list" class="token-list"><div class="empty-state">No tokens created.</div></div>
+        <div class="data-actions"><button class="btn btn-outline" id="import-data">Import backup</button><input type="file" id="import-file" accept="application/json,.json" hidden><button class="btn btn-outline danger-btn" id="clear-data">Delete all local data</button></div>
+        <p class="local-warning">Browser storage can be cleared by the browser, device cleanup, or private-browsing session end. Export regular backups. This app does not sync between browsers or devices.</p>
+      </div>
+    </section>
+    <footer><a class="brand footer-brand" href="#home"><span class="brand-mark">C</span><span>cliply<span class="brand-dot">.</span></span></a><span>Browser-only paste vault.</span><span>Your data stays on this device.</span></footer>
+  </main>
+  <div class="modal-backdrop hidden" id="result-modal"><div class="modal panel result-modal"><button class="modal-close" id="result-close">×</button><div class="success-mark">✓</div><div class="eyebrow">SAVED TO THIS BROWSER</div><h2>Your paste is saved.</h2><p>This local reference works only in this browser profile. Export the paste or its data to move it elsewhere.</p><div class="share-link"><input id="share-url" readonly><button class="btn btn-primary" id="copy-link">Copy</button></div><div class="result-links" id="result-links"></div><button class="btn btn-outline full" id="done-result">Done</button></div></div>
+  <script type="application/json" id="cliply-config">{"storage":"indexeddb+localstorage","mode":"local-only"}</script>
+</body></html>
